@@ -1,0 +1,59 @@
+/**
+The themes for the application. All themes needs to have the same keys defined.
+ */
+$themes: (
+  standard: (
+    'primary-bg-color': #f0f0f0,
+    'secondary-bg-color': #ffffff,
+    'primary-line-color': #dddddd,
+    'secondary-line-color': #168dc5,
+    'focused-link': #168dc5,
+    'navigation-focused-link-color': #168dc5,
+    'navigation-focused-link-bg-color': white,
+    'a-focused-link-bg-color': #68c0ea,
+    'a-focused-link-color': #ffffff,
+    'font-size': 1em,
+    'brodtext-color': #4f4f4f,
+    'fontsize-percent-based': 90%
+  ),
+  high-contrast: (
+    'primary-bg-color': white,
+    'secondary-bg-color': #ffffff,
+    'primary-line-color': black,
+    'secondary-line-color': black,
+    'focused-link': black,
+    'navigation-focused-link-color': white,
+    'navigation-focused-link-bg-color': black,
+    'a-focused-link-bg-color': black,
+    'a-focused-link-color': white,
+    'font-size': 1.1em,
+    'brodtext-color': black,
+    'fontsize-percent-based': 100%
+  )
+);
+
+/**
+Used on conjunction with @themed function to provide theming of css. See at common.scss as a reference how to use the methods.
+Used by Themelselector.jsx as a reference for toggling themes.
+ */
+@mixin themify($themes: $themes) {
+  @each $theme, $map in $themes {
+    .theme-#{$theme} & {
+      $theme-map: () !global;
+      @each $key, $submap in $map {
+        $value: map-get(map-get($themes, $theme), '#{$key}');
+        $theme-map: map-merge(
+          $theme-map,
+          (
+            $key: $value
+          )
+        ) !global;
+      }
+      @content;
+      $theme-map: null !global;
+    }
+  }
+}
+@function themed($key) {
+  @return map-get($theme-map, $key);
+}
